@@ -3,24 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Map</title>
+    <title>Interactive Map with Search and Markers</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-search/dist/leaflet-search.min.css">
     <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+        }
         #map {
-            height: 90vh;
+            height: 100%;
+            width: 100%;
         }
         #remove-markers {
             position: absolute;
             top: 10px;
             right: 10px;
             z-index: 1000;
+            background-color: #ff6347;
+            border: none;
+            padding: 10px 20px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        #remove-markers:hover {
+            background-color: #ff4500;
         }
     </style>
 </head>
 <body>
     <button id="remove-markers">Remove Markers</button>
     <div id="map"></div>
+
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="main.js"></script>
+    <script src="https://unpkg.com/leaflet-search/dist/leaflet-search.min.js"></script>
+    <script>
+        
+        var map = L.map('map').setView([51.505, -0.09], 13);
+
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        
+        var searchControl = new L.Control.Search({
+            position: 'topright',
+            layer: map,
+            initial: false,
+            zoom: 14,
+            textPlaceholder: 'Search...'
+        });
+        searchControl.addTo(map);
+
+        
+        var markers = [];
+
+      
+        map.on('click', function(e) {
+            var marker = L.marker(e.latlng).addTo(map);
+            markers.push(marker);
+        });
+
+        
+        document.getElementById('remove-markers').addEventListener('click', function() {
+            markers.forEach(function(marker) {
+                map.removeLayer(marker);
+            });
+            markers = [];
+        });
+    </script>
 </body>
 </html>

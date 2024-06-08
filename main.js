@@ -42,3 +42,14 @@ map.on('click', function(e) {
 });
 
 document.getElementById('remove-markers').addEventListener('click', removeMarkers);
+
+
+const searchControl = new L.Control.Search({
+    position: 'topright', 
+    layer: map, 
+    initial: false, 
+    zoom: 14, 
+    textPlaceholder: 'Search...', 
+    marker: false 
+});
+searchControl.addTo(map); 
