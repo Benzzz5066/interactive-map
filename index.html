@@ -4,20 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Benzzz Map</title>
-    <link rel="stylesheet" href="styles.css" href="C:\Users\stell\OneDrive\Desktop\interactive map">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet-search/dist/leaflet-search.min.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <button id="remove-markers">Remove Markers</button>
-    <div id="map"></div>
-
-    <!-- Leaflet Search control -->
-    <div class="leaflet-control-search leaflet-bar">
-        <input type="text" class="search-control" placeholder="Search...">
-        <div class="search-tooltip"></div>
+    <div id="menu" class="collapsed">
+        <button id="zoom-in">+</button>
+        <button id="zoom-out">-</button>
+        <button id="remove-markers">Remove Markers</button>
+        <div id="search-container"></div>
     </div>
+    <button id="menu-toggle">☰</button>
+    <div id="map"></div>
 
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>

@@ -1,89 +1,71 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const map = L.map('map').setView([51.505, -0.09], 13);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
+var map = L.map('map').setView([51.505, -0.09], 13);
 
-    let markers = [];
-    let points = [];
 
-    async function fetchWeatherData(lat, lon) {
-        const apiKey = '884faec5e589e544f4b0181a363d554c'; // Replace with your OpenWeatherMap API key
-        const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`;
-        
-        try {
-            const response = await fetch(url);
-            const data = await response.json();
-            
-            if (data.cod === 200) {
-                const weather = data.weather[0].description;
-                const temp = (data.main.temp - 273.15).toFixed(2); // Convert Kelvin to Celsius
-                
-                const marker = L.marker([lat, lon]).addTo(map)
-                    .bindPopup(`Weather: ${weather}<br>Temperature: ${temp}°C`)
-                    .openPopup();
-                
-                markers.push(marker);
-            } else {
-                console.error('Error fetching weather data:', data.message);
-            }
-        } catch (error) {
-            console.error('Error:', error);
-        }
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(map);
+
+
+var markersLayer = new L.LayerGroup();
+map.addLayer(markersLayer);
+
+
+var geocoder = L.Control.Geocoder.nominatim();
+
+
+var searchControl = new L.Control.Search({
+    url: 'https://nominatim.openstreetmap.org/search?format=json&q={s}', // Use Nominatim search API
+    jsonpParam: 'json_callback',
+    propertyName: 'display_name',
+    propertyLoc: ['lat', 'lon'],
+    marker: false,
+    moveToLocation: function(latlng, title, map) {
+        map.setView(latlng, 13);
+        L.marker(latlng).addTo(map).bindPopup(title).openPopup();
+    },
+    textErr: 'Location not found',
+    textPlaceholder: 'Search...'
+}).addTo(map);
+
+
+document.getElementById('search-container').appendChild(searchControl.getContainer());
+
+
+var exampleMarkers = [
+    L.marker([51.5, -0.09]).bindPopup('Marker 1'),
+    L.marker([51.51, -0.1]).bindPopup('Marker 2'),
+    L.marker([51.49, -0.08]).bindPopup('Marker 3')
+];
+
+
+exampleMarkers.forEach(function(marker) {
+    marker.addTo(markersLayer);
+});
+
+
+document.getElementById('remove-markers').addEventListener('click', function() {
+    markersLayer.clearLayers();
+});
+
+
+document.getElementById('menu-toggle').addEventListener('click', function() {
+    var menu = document.getElementById('menu');
+    if (menu.classList.contains('collapsed')) {
+        menu.classList.remove('collapsed');
+        this.style.left = '240px';
+    } else {
+        menu.classList.add('collapsed');
+        this.style.left = '10px';
     }
+});
 
-    function removeMarkers() {
-        markers.forEach(marker => map.removeLayer(marker));
-        markers = [];
-        points = [];
-    }
 
-    map.on('click', function(e) {
-        const { lat, lng } = e.latlng;
-        fetchWeatherData(lat, lng);
+document.getElementById('zoom-in').addEventListener('click', function() {
+    map.zoomIn();
+});
 
-        const marker = L.marker(e.latlng).addTo(map);
-        markers.push(marker);
-        points.push(e.latlng);
 
-        if (points.length === 2) {
-            const point1 = points[0];
-            const point2 = points[1];
-            const distance = calculateDistance(point1.lat, point1.lng, point2.lat, point2.lng);
-            alert('Distance between the two points: ' + distance.toFixed(2) + ' km');
-            points = [];
-        }
-    });
-
-    document.getElementById('remove-markers').addEventListener('click', removeMarkers);
-
-    // Add geocoder control for search
-    var geocoder = L.Control.geocoder({
-        defaultMarkGeocode: false,
-        position: 'topright'
-    }).addTo(map);
-
-    geocoder.on('markgeocode', function(e) {
-        var bbox = e.geocode.bbox;
-        var poly = L.polygon([
-            bbox.getSouthEast(),
-            bbox.getNorthEast(),
-            bbox.getNorthWest(),
-            bbox.getSouthWest()
-        ]).addTo(map);
-        map.fitBounds(poly.getBounds());
-    });
-
-    function calculateDistance(lat1, lon1, lat2, lon2) {
-        const R = 6371;
-        const dLat = (lat2 - lat1) * Math.PI / 180;
-        const dLon = (lon2 - lon1) * Math.PI / 180;
-        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                  Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                  Math.sin(dLon / 2) * Math.sin(dLon / 2);
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        const distance = R * c;
-        return distance;
-    }
+document.getElementById('zoom-out').addEventListener('click', function() {
+    map.zoomOut();
 });
