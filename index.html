@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Map with Search and Markers</title>
+    <title>Interactive Map with Search and Distance Calculation</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-search/dist/leaflet-search.min.css">
     <style>
         body, html {
             margin: 0;
@@ -36,7 +37,7 @@
         }
         .leaflet-control-geocoder {
             position: absolute !important;
-            top: 50px !important;
+            top: 100px !important;
             right: 10px !important;
             z-index: 1000;
         }
@@ -48,50 +49,7 @@
 
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
-    <script>
-        var map = L.map('map').setView([51.505, -0.09], 13);
-
-        
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors',
-            noWrap: true
-        }).addTo(map);
-
-       
-        var geocoder = L.Control.geocoder({
-            defaultMarkGeocode: false
-        }).addTo(map);
-
-        
-        document.querySelector('.leaflet-control-geocoder').style.top = '50px';
-
-        
-        geocoder.on('markgeocode', function(e) {
-            var bbox = e.geocode.bbox;
-            var poly = L.polygon([
-                bbox.getSouthEast(),
-                bbox.getNorthEast(),
-                bbox.getNorthWest(),
-                bbox.getSouthWest()
-            ]).addTo(map);
-            map.fitBounds(poly.getBounds());
-        });
-
-        var markers = [];
-
-        
-        map.on('click', function(e) {
-            var marker = L.marker(e.latlng).addTo(map);
-            markers.push(marker);
-        });
-
-       
-        document.getElementById('remove-markers').addEventListener('click', function() {
-            markers.forEach(function(marker) {
-                map.removeLayer(marker);
-            });
-            markers = [];
-        });
-    </script>
+    <script src="https://unpkg.com/leaflet-search/dist/leaflet-search.min.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>
