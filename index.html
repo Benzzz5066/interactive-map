@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive Map with Search and Markers</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-search/dist/leaflet-search.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css">
     <style>
         body, html {
             margin: 0;
@@ -34,6 +34,12 @@
         #remove-markers:hover {
             background-color: #ff4500;
         }
+        .leaflet-control-geocoder {
+            position: absolute !important;
+            top: 50px !important;
+            right: 10px !important;
+            z-index: 1000;
+        }
     </style>
 </head>
 <body>
@@ -41,36 +47,45 @@
     <div id="map"></div>
 
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/leaflet-search/dist/leaflet-search.min.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
     <script>
-        
         var map = L.map('map').setView([51.505, -0.09], 13);
 
         
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors'
+            attribution: '&copy; OpenStreetMap contributors',
+            noWrap: true
+        }).addTo(map);
+
+       
+        var geocoder = L.Control.geocoder({
+            defaultMarkGeocode: false
         }).addTo(map);
 
         
-        var searchControl = new L.Control.Search({
-            position: 'topright',
-            layer: map,
-            initial: false,
-            zoom: 14,
-            textPlaceholder: 'Search...'
-        });
-        searchControl.addTo(map);
+        document.querySelector('.leaflet-control-geocoder').style.top = '50px';
 
         
+        geocoder.on('markgeocode', function(e) {
+            var bbox = e.geocode.bbox;
+            var poly = L.polygon([
+                bbox.getSouthEast(),
+                bbox.getNorthEast(),
+                bbox.getNorthWest(),
+                bbox.getSouthWest()
+            ]).addTo(map);
+            map.fitBounds(poly.getBounds());
+        });
+
         var markers = [];
 
-      
+        
         map.on('click', function(e) {
             var marker = L.marker(e.latlng).addTo(map);
             markers.push(marker);
         });
 
-        
+       
         document.getElementById('remove-markers').addEventListener('click', function() {
             markers.forEach(function(marker) {
                 map.removeLayer(marker);
