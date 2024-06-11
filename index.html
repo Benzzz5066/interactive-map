@@ -3,49 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Map with Search and Distance Calculation</title>
+    <title>Benzzz Map</title>
+    <link rel="stylesheet" href="styles.css" href="C:\Users\stell\OneDrive\Desktop\interactive map">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet-search/dist/leaflet-search.min.css">
-    <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            width: 100%;
-        }
-        #map {
-            height: 100%;
-            width: 100%;
-        }
-        #remove-markers {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            z-index: 1000;
-            background-color: #ff6347;
-            border: none;
-            padding: 10px 20px;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
-        #remove-markers:hover {
-            background-color: #ff4500;
-        }
-        .leaflet-control-geocoder {
-            position: absolute !important;
-            top: 100px !important;
-            right: 10px !important;
-            z-index: 1000;
-        }
-    </style>
 </head>
 <body>
     <button id="remove-markers">Remove Markers</button>
     <div id="map"></div>
+
+    <!-- Leaflet Search control -->
+    <div class="leaflet-control-search leaflet-bar">
+        <input type="text" class="search-control" placeholder="Search...">
+        <div class="search-tooltip"></div>
+    </div>
 
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
