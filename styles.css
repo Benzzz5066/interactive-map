@@ -103,14 +103,14 @@ body, html {
 }
 
 #menu.collapsed {
-    transform: translateX(-240px);
+    transform: translateX(-280px);
     background-color: #fafafa;
 }
 
 #menu-toggle {
     position: absolute;
     top: 10px;
-    left: 10px;
+    left: 250px;
     z-index: 1001;
     background-color: #fff;
     border: none;
@@ -120,6 +120,10 @@ body, html {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease, background-color 0.3s ease;
     animation: buttonPulse 1.5s infinite alternate;
+}
+
+#menu-toggle.collapsed {
+    left:10px;
 }
 
 #menu-toggle:hover {
@@ -159,4 +163,8 @@ body, html {
 
 
 
+}
+
+.leaflet-control-zoom {
+    display: none;
 }

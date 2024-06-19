@@ -53,10 +53,10 @@ document.getElementById('menu-toggle').addEventListener('click', function() {
     var menu = document.getElementById('menu');
     if (menu.classList.contains('collapsed')) {
         menu.classList.remove('collapsed');
-        this.style.left = '240px';
-    } else {
+        this.classList.remove('collapsed');
+} else {
         menu.classList.add('collapsed');
-        this.style.left = '10px';
+        this.classList.add('collapsed');
     }
 });
 
